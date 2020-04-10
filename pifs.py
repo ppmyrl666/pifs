@@ -1,7 +1,8 @@
 # calculate pi using BBP formula
 c_get_16sj = 100  # constant in get_16sj
 d_get_16x_mod_y = {}  # dictionary to accelerate power->mod calculation
-
+print_search_flag = True  # if you want to monitor the speed of search
+print_search_gap = 100
 
 def decimal(x):
     if x < 0:
@@ -67,7 +68,7 @@ def find_s_in_pi(s):
 
     while not found:
 
-        if pos % 10 == 0:
+        if pos % print_search_gap == 0 and print_search_flag == True:
             print("search to ", pos)
 
         for i in range(0, len_s):
