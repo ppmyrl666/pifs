@@ -1,8 +1,8 @@
-c_get_16sj = 100  # constant in get_16sj
-d_get_16x_mod_y = {}
-
-
 # calculate pi using BBP formula
+c_get_16sj = 100  # constant in get_16sj
+d_get_16x_mod_y = {}  # dictionary to accelerate power->mod calculation
+
+
 def decimal(x):
     if x < 0:
         raise Exception("Invalid input to decimal", x)
@@ -10,12 +10,11 @@ def decimal(x):
         return x - int(x)
 
 
-# avoid too large x in get_16sj calculation
+# calculate (16^x) mod y
 def get_16x_mod_y(x, y):
     if x == 0:
         d_get_16x_mod_y[(x, y)] = 1
         return 1
-
     if (x, y) in d_get_16x_mod_y:
         return d_get_16x_mod_y[(x, y)]
     else:
@@ -34,9 +33,9 @@ def get_16x_mod_y(x, y):
     """
 
 
+# calculate decimal part of BBP(BBP is divided into four parts with j=1,2,5,6)
 def get_16sj(j, d):
     output = 0
-
     for k in range(d, -1, -1):
         output = output + get_16x_mod_y(d - k, 8 * k + j) / (8 * k + j)
         output = decimal(output)
@@ -46,6 +45,7 @@ def get_16sj(j, d):
     return output
 
 
+# calculate the nth hex number in pi,n start with 0
 def n_in_pi(n):
     if n == 0:
         return 3
@@ -58,6 +58,7 @@ def n_in_pi(n):
         return fd
 
 
+# find hex string in hex pi sequence
 def find_s_in_pi(s):
     len_s = len(s)
     pos = 0
@@ -86,7 +87,11 @@ def find_s_in_pi(s):
     return pos
 
 
-s = [5, 5, 6, 15]
+# main
+s_raw = input("please input hex string:\n")
+s = []
+for word in s_raw:
+    s.append(int(word, 16))
 pos = find_s_in_pi(s)
 print("s with length", len(s), "found in pos", pos)
 
